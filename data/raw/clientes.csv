@@ -1,0 +1,6 @@
+id_cliente,nome,email,idade,valor_compra,data_registro
+1,Ana Silva,ana@email.com,29,150.50,2026-01-10
+2,Bruno Costa,bruno-email-invalido,35,89.90,2026-02-15
+3,Carlos Souza,carlos@email.com,15,200.00,2026-03-01
+4,Daniela Lima,DANIELA@EMAIL.COM,42,-50.00,2026-03-20
+5,Eduardo Ramos,eduardo@email.com,31,320.75,2026-04-01
