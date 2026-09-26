@@ -62,3 +62,15 @@ def test_extract_le_valores_como_texto(tmp_path, monkeypatch):
 
     assert dados[0]["idade"] == "29"
     assert dados[0]["valor_compra"] == "150.50"
+
+
+def test_extract_aceita_raw_dir_explicito_sobrepondo_o_padrao(tmp_path):
+    """O parametro raw_dir (usado pela flag --raw-dir da CLI) deve ter
+    prioridade sobre o RAW_DIR padrao do modulo."""
+    _escrever_csv(tmp_path / "clientes.csv",
+                  "1,Ana Silva,ana@email.com,29,150.50,2026-01-10\n")
+
+    dados = mod.extract(raw_dir=tmp_path)
+
+    assert len(dados) == 1
+    assert dados[0]["nome"] == "Ana Silva"

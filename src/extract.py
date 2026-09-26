@@ -5,7 +5,7 @@ from config import RAW_DIR
 logger = logging.getLogger(__name__)
 
 
-def extract() -> list:
+def extract(raw_dir=None) -> list:
     """Le todos os arquivos .csv encontrados em data/raw e retorna os
     registros brutos como lista de dicts, prontos para validacao.
 
@@ -15,11 +15,14 @@ def extract() -> list:
     - Os valores sao lidos como texto (dtype=str) para que a validacao de
       tipo e formato aconteca de forma centralizada no schema (Pydantic),
       e nao aqui na extracao.
+    - `raw_dir`, se informado, sobrepoe o diretorio padrao (RAW_DIR); usado
+      pela flag --raw-dir da CLI para apontar para outra pasta de entrada.
     """
-    arquivos_csv = sorted(RAW_DIR.glob("*.csv"))
+    diretorio = raw_dir if raw_dir is not None else RAW_DIR
+    arquivos_csv = sorted(diretorio.glob("*.csv"))
 
     if not arquivos_csv:
-        logger.warning("Extract: nenhum arquivo .csv encontrado em %s", RAW_DIR)
+        logger.warning("Extract: nenhum arquivo .csv encontrado em %s", diretorio)
         return []
 
     dataframes = []

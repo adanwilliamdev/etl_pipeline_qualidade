@@ -1,0 +1,11 @@
+.git
+.pytest_cache
+__pycache__
+*.pyc
+.venv
+venv
+logs/*.log
+data/processed/*
+data/quarantine/*
+!data/processed/.gitkeep
+!data/quarantine/.gitkeep
