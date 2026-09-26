@@ -13,6 +13,8 @@ carga incremental, historico de execucoes, relatorio de qualidade e alertas.
     python main.py --raw-dir /caminho/para/outra/pasta   # usa outra pasta de entrada
     python main.py --dry-run                              # valida e gera relatorio,
                                                             # sem gravar no banco/historico
+    python main.py --reprocessar-quarentena                # tenta revalidar
+                                                            # data/quarantine/quarentena.csv
 
 ### Com Docker
 
@@ -36,9 +38,29 @@ Coloque um ou mais arquivos `.csv` em `data/raw/` (ou na pasta indicada por
   quem valida e converte tipos — assim toda a logica de validacao fica
   centralizada em um unico lugar.
 - Registros com `id_cliente` repetido sao tratados como duplicatas: o
-  primeiro e' mantido como valido, os seguintes vao para quarentena.
+  registro com `data_registro` mais recente e' mantido como valido; os
+  demais vao para quarentena, sinalizados como duplicata **identica**
+  (todos os campos iguais) ou **conflitante** (mesmo id_cliente, dados
+  diferentes) — util para priorizar a revisao manual.
+- Os limites de validacao (idade minima/maxima, valor de compra minimo,
+  tamanho do nome, limite de alerta) ficam em `regras_qualidade.yaml`, na
+  raiz do projeto, e podem ser ajustados sem alterar codigo Python.
 
 Um arquivo de exemplo (`data/raw/clientes.csv`) ja vem incluido para teste.
+
+## Corrigindo e reprocessando a quarentena
+
+Depois de investigar `data/quarantine/quarentena.csv`, corrija os dados
+diretamente nesse arquivo (por exemplo, o e-mail de um cliente) e rode:
+
+    python main.py --reprocessar-quarentena
+
+O comando revalida apenas os registros da quarentena (reaplicando as mesmas
+regras e a logica de deduplicacao do pipeline normal). Registros que passam
+a ser validos sao gravados em `clientes.db` (upsert) e exportados para
+`data/processed/recuperados_quarentena.csv`; os que continuam invalidos
+permanecem em `quarentena.csv`. Se todos forem recuperados, o arquivo de
+quarentena e' removido.
 
 ## Qualidade e observabilidade
 
@@ -60,6 +82,7 @@ Um arquivo de exemplo (`data/raw/clientes.csv`) ja vem incluido para teste.
 ## Saidas
 
 - data/processed/dados_validados.csv
+- data/processed/recuperados_quarentena.csv (apos --reprocessar-quarentena)
 - data/processed/clientes.db (tabelas `clientes` e `execucoes`)
 - data/processed/relatorio_qualidade.html
 - data/quarantine/quarentena.csv

@@ -1,0 +1,15 @@
+# Regras de qualidade / negocio do pipeline ETL.
+#
+# Edite os valores abaixo para ajustar os limites de validacao sem precisar
+# alterar codigo Python. Chaves ausentes aqui usam o padrao definido em
+# config.py (REGRAS_PADRAO); chaves desconhecidas sao ignoradas.
+
+idade_min: 18
+idade_max: 120
+valor_compra_min: 0.0
+nome_min_length: 2
+nome_max_length: 120
+
+# Percentual de registros rejeitados (quarentena) a partir do qual o
+# pipeline dispara um alerta (log + webhook, se configurado).
+limite_alerta_erros: 30.0

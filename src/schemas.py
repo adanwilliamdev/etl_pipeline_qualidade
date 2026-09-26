@@ -1,11 +1,11 @@
 ﻿from datetime import datetime
 from pydantic import BaseModel, Field, field_validator
-from config import IDADE_MIN, IDADE_MAX, VALOR_COMPRA_MIN
+from config import IDADE_MIN, IDADE_MAX, VALOR_COMPRA_MIN, NOME_MIN_LENGTH, NOME_MAX_LENGTH
 
 
 class ClienteSchema(BaseModel):
     id_cliente: int
-    nome: str = Field(min_length=2, max_length=120)
+    nome: str = Field(min_length=NOME_MIN_LENGTH, max_length=NOME_MAX_LENGTH)
     email: str
     idade: int = Field(ge=IDADE_MIN, le=IDADE_MAX)
     valor_compra: float = Field(gt=VALOR_COMPRA_MIN)
